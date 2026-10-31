@@ -1,7 +1,11 @@
 import sqlite3
 import streamlit as st
+# ของใหม่ (Turso Cloud)
+import libsql_experimental as libsql
+TURSO_URL = "libsql://dss-tokens-db-konsaelau-oss.aws-ap-southeast-1.turso.io"
+TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTM0NDQ2MDUsImlkIjoiMDFhMTkxOWYtNmUwMS03MjY3LTg4NDUtMGI5YzllMjhlZThhIiwia2lkIjoidlBGRVZWTVhKQ3pKSk50bWJjTTdZTzlOX3lqMG5ONjhHOXBlTkFpbDNXQSIsInJpZCI6Ijk4ZTI2ZmY3LTFjNTMtNDc5MS1iMWJkLWRhMThkYzNjMDc5ZSJ9.HV0xLkLhnRabAvhf7Hv7D-KcUhYho5ue7kLX3R772ZlMucKNOIY12y6O-aGNW1KCHUitxYzLHxO0h0gPDoF2BQ"
 
-DB_FILE = "giftshop_tokens.db"
+#DB_FILE = "giftshop_tokens.db"
 
 st.set_page_config(
     page_title="DSS Token Wallet - เช็ก Token สะสม",
@@ -15,7 +19,7 @@ st.caption("เช็กยอด Token ส่วนลดและประว�
 phone = st.text_input("📱 กรอกเบอร์โทรศัพท์ที่ใช้สะสม Token", max_chars=10)
 
 if phone:
-    conn = sqlite3.connect(DB_FILE)
+    conn = libsql.connect(database=TURSO_URL, auth_token=TURSO_TOKEN)
     c = conn.cursor()
 
     # ดึงข้อมูลลูกค้า
