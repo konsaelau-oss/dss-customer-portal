@@ -4,15 +4,15 @@ import streamlit as st
 DB_FILE = "giftshop_tokens.db"
 
 st.set_page_config(
-    page_title="DSS Token Wallet - เช็กเหรียญสะสม",
+    page_title="DSS Token Wallet - เช็ก Token สะสม",
     page_icon="🪙",
     layout="centered",
 )
 
-st.title("👛 กระเป๋าเหรียญสะสม DSS Community Token")
-st.caption("เช็กยอดเหรียญส่วนลดและประวัติการใช้งานด้วยเบอร์โทรศัพท์")
+st.title("👛 กระเป๋า DSS Community Token")
+st.caption("เช็กยอด Token ส่วนลดและประวัติการใช้งานด้วยเบอร์โทรศัพท์")
 
-phone = st.text_input("📱 กรอกเบอร์โทรศัพท์ที่ใช้สะสมเหรียญ", max_chars=10)
+phone = st.text_input("📱 กรอกเบอร์โทรศัพท์ที่ใช้สะสม Token", max_chars=10)
 
 if phone:
     conn = sqlite3.connect(DB_FILE)
@@ -28,21 +28,28 @@ if phone:
         name = cust[0] or "คุณลูกค้า"
         balance = cust[1] or 0
 
-        # แสดงการ์ดสะสมเหรียญ
+        # แสดงการ์ดสะสม Token
         st.success(f"🎉 ยินดีต้อนรับ **{name}**")
 
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("🪙 เหรียญคงเหลือ", f"{balance} เหรียญ")
+            st.metric("🪙 Token คงเหลือ", f"{balance} Token")
         with col2:
-            discount_val = balance * 5  # เช่น 1 เหรียญ = ส่วนลด 5 บาท
+            # ตามกติกา 5 Token = ส่วนลด 25 บาท (คิดเป็น Token ละ 5 บาท)
+            discount_val = balance * 5
             st.metric("💡 มูลค่าส่วนลดสะสม", f"{discount_val} บาท")
 
         st.markdown("---")
-        st.markdown("### 📜 ประวัติรายการรับ/ใช้เหรียญ")
+        st.markdown("### 📜 ประวัติรายการรับ/ใช้ Token")
 
+        # ดึงเฉพาะรายการที่ไม่โดน Void
         c.execute(
-            "SELECT type, amount, note, created_at FROM transactions WHERE phone = ? ORDER BY id DESC LIMIT 10",
+            """
+            SELECT type, amount, note, created_at 
+            FROM transactions 
+            WHERE phone = ? AND (is_void = 0 OR is_void IS NULL) 
+            ORDER BY id DESC LIMIT 10
+        """,
             (phone,),
         )
         history = c.fetchall()
@@ -50,12 +57,12 @@ if phone:
         if history:
             for item in history:
                 t_type = (
-                    "🟢 ได้รับเหรียญ"
+                    "🟢 ได้รับ Token"
                     if item[0] == "EARN"
-                    else "🔴 ใช้ส่วนลด/แลกของ"
+                    else "🔴 ใช้ Token ส่วนลด"
                 )
                 st.write(
-                    f"• **[{item[3][:10]}]** {t_type} `{item[1]}` เหรียญ ({item[2]})"
+                    f"• **[{item[3][:10]}]** {t_type} `{item[1]}` Token — *(หมายเหตุ: {item[2]})*"
                 )
         else:
             st.caption("ยังไม่มีประวัติการใช้งาน")
