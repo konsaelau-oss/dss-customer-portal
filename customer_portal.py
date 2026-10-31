@@ -1,7 +1,8 @@
 import sqlite3
 import streamlit as st
 # ของใหม่ (Turso Cloud)
-import libsql_experimental as libsql
+# ของใหม่
+import libsql
 TURSO_URL = "libsql://dss-tokens-db-konsaelau-oss.aws-ap-southeast-1.turso.io"
 TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTM0NDQ2MDUsImlkIjoiMDFhMTkxOWYtNmUwMS03MjY3LTg4NDUtMGI5YzllMjhlZThhIiwia2lkIjoidlBGRVZWTVhKQ3pKSk50bWJjTTdZTzlOX3lqMG5ONjhHOXBlTkFpbDNXQSIsInJpZCI6Ijk4ZTI2ZmY3LTFjNTMtNDc5MS1iMWJkLWRhMThkYzNjMDc5ZSJ9.HV0xLkLhnRabAvhf7Hv7D-KcUhYho5ue7kLX3R772ZlMucKNOIY12y6O-aGNW1KCHUitxYzLHxO0h0gPDoF2BQ"
 
